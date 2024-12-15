@@ -11,7 +11,7 @@ import Link from "next/link";
 
 export default function RegisterUserSuccess() {
   return (
-    <div className="h-full flex items-center justify-center">
+    <div className="h-full px-4 md:px-12 flex items-center justify-center">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-center text-2xl font-bold text-green-600">
