@@ -10,10 +10,9 @@ export class CreateUserUseCase
   constructor(private readonly prisma: PrismaService) {}
 
   async execute(input: CreateUserDto): Promise<User> {
-    const existingUser = await this.prisma.user.findUnique({
+    const existingUser = await this.prisma.user.findFirst({
       where: {
-        email: input.email,
-        OR: [{ cpf: input.cpf }],
+        OR: [{ cpf: input.cpf }, { email: input.email }],
       },
     });
 

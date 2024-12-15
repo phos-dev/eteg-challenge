@@ -25,15 +25,22 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../components/ui/form";
+} from "../../components/ui/form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { isValidCpf } from "../lib/functionUtils/isValidCpf";
-import { Textarea } from "../components/ui/textarea";
-import { useToast } from "../hooks/use-toast";
-import { createUser } from "../services/userService";
+import { isValidCpf } from "../../lib/functionUtils/isValidCpf";
+import { Textarea } from "../../components/ui/textarea";
+import { useToast } from "../../hooks/use-toast";
+import { createUser } from "../../services/userService";
 import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "ETEG - Registro de Usuário",
+  description: "Cadastre suas informações para ser registrado na plataforma.",
+};
 
 const formSchema = z.object({
   name: z
@@ -70,8 +77,9 @@ const userColors = [
   { value: "VIOLET", label: "Violeta" },
 ];
 
-export default function Home() {
+export default function RegisterUserForm() {
   const { toast } = useToast();
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -81,10 +89,18 @@ export default function Home() {
 
   const onSubmit = async (values: CreateUserDto) => {
     try {
-      await createUser(values);
+      const payload = {
+        ...values,
+        cpf: String(values.cpf).replace(/\D/g, ""),
+      };
+
+      await createUser(payload);
+
       toast({
         title: "Usuário registrado com sucesso",
       });
+
+      return router.push("/users/register/success");
     } catch (error) {
       const getErrorMessage = (err: unknown) => {
         if (err instanceof AxiosError) {
@@ -105,21 +121,22 @@ export default function Home() {
     <div className="flex items-center justify-center px-4 md:px-12 h-full">
       <Card className="max-w-[800px] w-full">
         <CardHeader>
-          <CardTitle className="capitalize">Registro de usuário</CardTitle>
-          <CardDescription>
+          <CardTitle className="capitalize text-xl">
+            Registro de usuário
+          </CardTitle>
+          <CardDescription className="text-lg">
             Insira as suas informações logo abaixo.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {JSON.stringify(form.watch())}
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 w-full items-center gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <FormField
                   control={form.control}
                   name="name"
                   render={({ field }) => (
-                    <FormItem className="flex flex-col space-y-1.5">
+                    <FormItem>
                       <FormLabel>Nome</FormLabel>
                       <FormControl>
                         <Input
@@ -135,7 +152,7 @@ export default function Home() {
                   control={form.control}
                   name="cpf"
                   render={({ field }) => (
-                    <FormItem className="flex flex-col space-y-1.5">
+                    <FormItem>
                       <FormLabel>CPF</FormLabel>
                       <FormControl>
                         <InputMask
@@ -154,7 +171,7 @@ export default function Home() {
                   control={form.control}
                   name="email"
                   render={({ field }) => (
-                    <FormItem className="flex flex-col space-y-1.5">
+                    <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
                         <Input
@@ -171,7 +188,7 @@ export default function Home() {
                   control={form.control}
                   name="favoriteColor"
                   render={({ field }) => (
-                    <FormItem className="flex flex-col space-y-1.5">
+                    <FormItem>
                       <FormLabel>Cor Favorita</FormLabel>
                       <FormControl>
                         <Select
@@ -198,7 +215,7 @@ export default function Home() {
                   control={form.control}
                   name="observations"
                   render={({ field }) => (
-                    <FormItem className="flex flex-col space-y-1.5 col-span-3">
+                    <FormItem className="col-span-full">
                       <FormLabel>Observações</FormLabel>
                       <FormControl>
                         <Textarea
@@ -216,7 +233,12 @@ export default function Home() {
           </Form>
         </CardContent>
         <CardFooter className="flex justify-end">
-          <Button onClick={form.handleSubmit(onSubmit)}>Salvar</Button>
+          <Button
+            onClick={form.handleSubmit(onSubmit)}
+            className="w-full md:max-w-sm"
+          >
+            Salvar
+          </Button>
         </CardFooter>
       </Card>
     </div>

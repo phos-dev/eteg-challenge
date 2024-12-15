@@ -6,6 +6,8 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "build:prod": "docker build . -t phos21/eteg-back-end:latest",
+    "deploy": "docker push phos21/eteg-back-end:latest",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",

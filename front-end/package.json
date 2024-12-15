@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:prod": "docker build . -t phos21/eteg-front-end:latest",
+    "deploy": "docker push phos21/eteg-front-end:latest",
     "start": "next start",
     "lint": "next lint"
   },
