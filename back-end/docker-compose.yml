@@ -1,0 +1,15 @@
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:9.6-alpine
+    environment:
+      POSTGRES_USER: johndoe
+      POSTGRES_PASSWORD: randompassword
+      POSTGRES_DB: eteg
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-eteg-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-eteg-data:
