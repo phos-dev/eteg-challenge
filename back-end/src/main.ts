@@ -6,7 +6,7 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://localhost:3000',
-      'https://eteg-front-end-production.up.railway.app/',
+      'https://eteg-front-end-production.up.railway.app',
     ],
   });
   await app.listen(process.env.PORT ?? 3000);
