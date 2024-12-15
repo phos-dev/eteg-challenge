@@ -1,6 +1,6 @@
 FROM node:18-alpine AS base
 
-ENV NODE_ENV=production
+ENV NODE_ENV production
 
 # Install dependencies only when needed
 FROM base AS deps
